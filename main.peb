@@ -1,0 +1,70 @@
+const SHIP_SPRITE = #include["assets/ship.bin"] ' at compile time loads the bin and puts it into the SHIP_SPRITE constant
+
+type Pos
+    x: int
+    y: int
+end
+
+type Sprite
+    pos: Pos
+end
+
+type Game
+    x : int
+    y : float
+    player: Sprite
+    sprites: Sprite[32]
+    z : bool
+end
+
+count = 0
+
+g : Game
+g.x = 30
+
+h = g   ' just to test copy
+
+
+while true
+    clear 3
+
+    gosub logic
+    gosub render
+
+    wait_vsync
+end
+
+logic:
+    count = count + 1 ' keep track of number of iterations
+    gamepad = gamepad(0)
+    if gamepad.left then g.sprites[2].pos.x -= 1
+    if gamepad.right then g.sprites[2].pos.x += 1
+return
+
+render:
+    sprite g.sprites[2].pos.x, 20, 16, SHIP_SPRITE
+
+    gosub draw_horizontal
+    gosub draw_vertical
+
+draw_horizontal:
+
+    for i = 0 to 10
+            for j=0 to 20 step 2
+                set i, j+32, 3+i
+                if j > 3 then exit
+            end
+    end
+
+return
+
+
+draw_vertical:
+
+    for i = 10 to 0 step -2
+        set g.sprites[2].pos.x + 40 , 20+i, 10+i
+    end
+
+    text 10, 120, "hello", 4
+
+return
